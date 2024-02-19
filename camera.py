@@ -1,6 +1,5 @@
 
 import datetime
-import time
 import os
 import base64
 from PIL import ImageFont, ImageDraw, Image
@@ -24,18 +23,20 @@ def take_photo(camera: Picamera2) -> str:
     """
 
     # Potentially move this out of this method to save overhead
-    camera.start()
+    if not camera.started:
+        camera.start()
 
     now = datetime.datetime.now()
-    filepath = f"img/photo_{now.year}_{now.month}_{now.day}_{now.hour}_{now.minute}_{now.second}___{base64.b64encode(os.urandom(8))[:4].decode()}.jpg"
+    filepath = f"img/photo_{now.year}_{now.month}_{now.day}_{now.hour}_{now.minute}_{now.second}___{base64.urlsafe_b64encode(os.urandom(8))[:4].decode()}.jpg"
 
     camera.capture_file(filepath)
 
-
     # Potentially move this out of this method to save overhead
-    camera.stop()
+    #camera.stop()
 
     watermark_image(filepath=filepath, timestamp=now)
+
+    print(f"Took image at {filepath}")
     return filepath
 
 
@@ -60,8 +61,6 @@ def watermark_image(filepath, timestamp: datetime = None) -> None:
 
     draw.text((x, y), str(timestamp), fill=(255, 255, 255), stroke_width=2, stroke_fill=(0,0,0), font=font, anchor='ls')
     image.save(filepath)
-
-
 
 
 
