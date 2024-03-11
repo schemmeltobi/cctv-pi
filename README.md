@@ -16,3 +16,6 @@ Add a font file to this folder. Configure the font name in camera.py to match th
 
 
 https://gpiozero.readthedocs.io/en/latest/recipes.html#motion-sensor
+
+
+Followed this tutorial for setting it up as a systemd.service https://github.com/torfsen/python-systemd-tutorial

@@ -14,6 +14,11 @@ def init_camera_for_photos(x_res : int =2592, y_res : int =1944) -> Picamera2:
     camera_config = picam.create_still_configuration(main={"size": (x_res,y_res)})
     picam.configure(camera_config)
 
+    # fix exposure and gain according to lighting situation in basement
+    # TODO works only on the firs shot
+    picam.controls.AnalogueGain = 16.0
+    picam.controls.ExposureTime = 30000
+
     return picam
 
 def take_photo(camera: Picamera2) -> str:
@@ -34,6 +39,9 @@ def take_photo(camera: Picamera2) -> str:
     # Potentially move this out of this method to save overhead
     #camera.stop()
 
+    metadata = camera.capture_metadata()
+    print(f"Exposure: {metadata['ExposureTime']}   Analogue gain: {metadata['AnalogueGain']}")
+
     watermark_image(filepath=filepath, timestamp=now)
 
     print(f"Took image at {filepath}")
@@ -48,27 +56,16 @@ def watermark_image(filepath, timestamp: datetime = None) -> None:
     if not timestamp:
         timestamp = datetime.datetime.now()
     
-    image = Image.open(filepath)
+    orig_img = Image.open(filepath)
+    image = orig_img.rotate(angle=90, expand=True)
 
     draw = ImageDraw.Draw(image)
     w, h = image.size
-    font_size = h/20
-    x = w/20
-    y = h - font_size
+    font_size = h/25
+    x = font_size
+    y = font_size
     font = ImageFont.truetype("arial.ttf", int(font_size))
-
-
-
     draw.text((x, y), str(timestamp), fill=(255, 255, 255), stroke_width=2, stroke_fill=(0,0,0), font=font, anchor='ls')
+
     image.save(filepath)
-
-
-
-
-# if __name__ == "__main__":
-#     cam = init_camera_for_photos()
-#     path = take_photo(cam)
-#     print(f"Filepath: {path}")
-
-
 
