@@ -1,21 +1,44 @@
 # CCTV using Raspberry Pi 
 
-
+Small project to catch the shoe thieve in my apartement building.
 
 # Setup on Raspberry Pi
 
-Packages that need to be installed on PiOs Lite:
+## Initial Rasperry Pi setup
+
+I recommend using PiOs Lite as an operating system and adding packages as necessary.
+
+Install basic packages:
+```
+sudo apt install git
+```
+
+## Providing a font file for timestamps
+
+Provide a font file and specify the path to it with `PATH_TO_FONFTILE`.
+
+
+## Setting up CCTV
+
+Do not try to run the python script inside a virtual env. It does not play nicely with picamera2. 
+The python version from PiOs wants you to use apt to install python modules instead of pip.
+
 
 ```
-sudo apt install build-essential libcap-dev libavformat-dev libavdevice-dev libcamera-dev
+$ sudo apt install python3-bottle python3-pillow python3-picamera2 python3-dotenv python3-nc-py-api
+$ git clone https://github.com/schemmeltobi/cctv-pi.git
+$ cd cctv-pi
+$ python main.py
 ```
 
-Do not try to run the python script inside a virtual env. Install picamera2 package using apt and not pip. Follow the instructions here from the [documentation page](https://pypi.org/project/picamera2/)
+## Setting it up as a service
 
-Add a font file to this folder. Configure the font name in camera.py to match the font that you downloaded. I am using arial.ttf
+Follow this tutorial for setting it up as a systemd.service https://github.com/torfsen/python-systemd-tutorial
 
+
+
+
+#### Useful links
 
 https://gpiozero.readthedocs.io/en/latest/recipes.html#motion-sensor
 
-
-Followed this tutorial for setting it up as a systemd.service https://github.com/torfsen/python-systemd-tutorial
