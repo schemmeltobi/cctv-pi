@@ -7,7 +7,7 @@ from camera import take_photo, init_camera_for_photos
 from gpiozero import MotionSensor, DigitalOutputDevice
 from threading import Thread, Event
 from dotenv import load_dotenv
-from nextcloud import init_nextcloud, upload_and_delete_file
+#from nextcloud import init_nextcloud, upload_and_delete_file
 
 
 
@@ -45,7 +45,7 @@ most_recent_path = ""
 q = queue.LifoQueue()
 
 # nextcloud instance
-nc = init_nextcloud(nc_base_url=nc_base_url, nc_user=nc_user, nc_pass=nc_pass)
+#nc = init_nextcloud(nc_base_url=nc_base_url, nc_user=nc_user, nc_pass=nc_pass)
 
 
 ############################################################
@@ -58,7 +58,7 @@ def hello():
 
 @app.route('/static/<filename>')
 def server_static(filename):
-    return static_file(filename, root='/home/pi/img')
+    return static_file(filename, root='/home/pi/cctv-pi/img')
 
 @app.route('/webcam')
 def web_cam():
@@ -184,6 +184,6 @@ def upload_from_queue():
 pir.when_activated = start_motion_thread
 
 # start upload thread
-Thread(target=upload_from_queue, daemon=True).start()
+#Thread(target=upload_from_queue, daemon=True).start()
 
 run(app, host='0.0.0.0', port=8080)
