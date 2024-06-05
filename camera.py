@@ -2,8 +2,19 @@
 import datetime
 import os
 import base64
+from dotenv import load_dotenv
 from PIL import ImageFont, ImageDraw, Image
 from picamera2 import Picamera2
+
+############################################################
+###########               Load Env
+############################################################
+
+
+load_dotenv()
+
+font_file = os.getenv("PATH_TO_FONFTILE", None)
+
 
 def init_camera_for_photos(x_res : int =2592, y_res : int =1944) -> Picamera2:
     """
@@ -64,7 +75,10 @@ def watermark_image(filepath, timestamp: datetime = None) -> None:
     font_size = h/25
     x = font_size
     y = font_size
-    font = ImageFont.truetype("arial.ttf", int(font_size))
+    if font_file:
+        font = ImageFont.truetype(font=font_file, size=int(font_size))
+    else:
+        font = ImageFont.load_default() 
     draw.text((x, y), str(timestamp), fill=(255, 255, 255), stroke_width=2, stroke_fill=(0,0,0), font=font, anchor='ls')
 
     image.save(filepath)
