@@ -2,6 +2,7 @@
 from json import dumps
 from nc_py_api import Nextcloud, NextcloudException
 import os
+import sys
 
 
 def init_nextcloud(nc_base_url: str, nc_user: str, nc_pass: str) -> Nextcloud:
@@ -40,5 +41,8 @@ if __name__ == "__main__":
     nc_pass = os.environ.get("NC_PASS", "")
 
     nc = init_nextcloud(nc_base_url=nc_base_url, nc_user=nc_user, nc_pass=nc_pass)
+    print(sys.argv[1])
+    print(nc_base_url)
+    print(nc_user)
 
-    upload_and_delete_file(nc, "img/photo_2024_2_24_21_48_46___5INK.jpg")
+    upload_and_delete_file(nc, sys.argv[1])
